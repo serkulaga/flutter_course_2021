@@ -5,9 +5,7 @@ import 'package:todo_list/model/todo_model_v3.dart';
 class AddItemPage extends StatefulWidget {
 
   @override
-  _AddItemPageState createState() {
-    return _AddItemPageState();
-  }
+  _AddItemPageState createState() => _AddItemPageState();
 }
 
 class _AddItemPageState extends State<AddItemPage> {
@@ -61,7 +59,7 @@ class _AddItemPageState extends State<AddItemPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pop(context, TodoModelV3(price: int.parse(priceController.text), title: titleController.text));
+                      Navigator.pop(context, new TodoModelV3(price: int.parse(priceController.text), title: titleController.text));
                     }
                   },
                   child: Text('Submit'),
