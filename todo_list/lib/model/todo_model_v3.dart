@@ -1,7 +1,7 @@
 class TodoModelV3 {
   final String title;
   final num price; 
-  final bool selected;
+  bool selected;
 
-  TodoModelV3({this.title: "", this.price: 0, this.selected: true});
+  TodoModelV3({this.title: "", this.price: 0, this.selected: false});
 }

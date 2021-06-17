@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_list/model/todo_model_v1.dart';
 
+import 'addItemPage.dart';
 import 'model/todo_model_v2.dart';
 import 'model/todo_model_v3.dart';
 
@@ -15,28 +16,48 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //List<TodoModelV1> _items = [];
+  //List<TodoModelV2> _items = [];
+  List<TodoModelV3> _items = [];
 
-  //List<TodoModel> _items = [];
+  _HomePageState() {
+    // final model1 = new TodoModelV1();
+    // model1.price = 10;
+    // model1.selected = false;
+    // model1.title = "first";
+    // _items.add(model1);
 
-  void _incrementCounter() {
-    
-    List<TodoModelV1> items1 = [];
-    final model1 = new TodoModelV1();
-    model1.price = 10;
-    model1.selected = false;
-    model1.title = "new";
-    items1.add(model1);
+    // final model2 = new TodoModelV1();
+    // model2.price = 10;
+    // model2.selected = false;
+    // model2.title = "second";
+    // _items.add(model2);
 
-
-    List<TodoModelV2> items2 = [];
-    items2.add(new TodoModelV2("new", 10, false));
-
+    //
+    // List<TodoModelV2> items2 = [];
+    // items2.add(new TodoModelV2("first", 10, false));
+    // items2.add(new TodoModelV2("first", 20, false));
 
     List<TodoModelV3> items3 = [];
-    items3.add(new TodoModelV3(price: 10, title: "new"));
+    items3.add(new TodoModelV3(price: 10, title: "first"));
+    items3.add(new TodoModelV3(price: 20, title: "second"));
+  }
 
-
+  void _add(TodoModelV3 item) {
     setState(() {
+      _items.add(item);
+    });
+  }
+
+  void _remove(TodoModelV3 item) {
+    setState(() {
+      _items.remove(item);
+    });
+  }
+
+  void _setSelectec(int index, bool selected) {
+    setState(() {
+      _items[index].selected = selected;
     });
   }
 
@@ -50,21 +71,63 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            SizedBox(
+              height: 20,
             ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              'Your TODO list:',
+            ),
+            Expanded(
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: _items.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _items[index].selected,
+                            onChanged: (value) =>
+                                _setSelectec(index, value ?? false),
+                          ),
+                          Text(_items[index].price.toString()),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            _items[index].title,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Colors.blue,
+                            ),
+                            onPressed: () => _remove(_items[index]),
+                            child: Icon(Icons.delete),
+                          )
+                        ],
+                      ),
+                    );
+                  }),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () async {
+          var newItem = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddItemPage()));
+          print(newItem);
+          if (newItem != null) {
+            _add(newItem);
+          }
+        },
+        tooltip: 'Add',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
